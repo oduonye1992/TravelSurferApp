@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react';
-import {AppRegistry, Text, StyleSheet} from 'react-native';
+import {AppRegistry, Text, StyleSheet, Platform} from 'react-native';
 import { Scene, Router, TabBar, Modal, Schema, Actions, Reducer, ActionConst } from 'react-native-router-flux'
 
 import TripsComponent from './routes/trips/trips';
@@ -34,6 +34,7 @@ import WalkthroughComponent from './routes/newdesign/walkthrough';
 import AirportComponent from './routes/newdesign/airports';
 import ConfirmationComponent from './routes/newdesign/confirmation';
 import OptionalEmailComponent from './routes/newdesign/optionalemail';
+import codePush from "react-native-code-push";
 
 
 class TabIcon extends Component {
@@ -81,4 +82,7 @@ let style = StyleSheet.create({
         color:'red'
     }
 });
+const deploymentKey = Platform.OS === 'ios' ? 'gW-vX1IiuEdteLWjcsTE_WqpuzrxNJS-h1V4M ' : 'dIQukamQjk_NrMoHi8FMx-rahYR8NJS-h1V4M ';
+let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, deploymentKey: deploymentKey };
+TravelSurfer = codePush(TravelSurfer);
 AppRegistry.registerComponent('TravelSurfer', () => TravelSurfer);
