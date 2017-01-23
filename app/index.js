@@ -40,17 +40,17 @@ import codePush from "react-native-code-push";
 class TabIcon extends Component {
     render(){
         return (
-            <Text style={{fontFamily: 'AvenirNext-Medium', color: this.props.selected ? 'red' :'black'}}>{this.props.title}</Text>
+            <Text style={{fontFamily: 'Avenir Next', color: this.props.selected ? 'red' :'black'}}>{this.props.title}</Text>
         );
+
     }
 }
 export default class TravelSurfer extends Component {
     render() {
         return (
             <Router>
-                <Scene key="test" component={WalkthroughComponent} hideNavBar={true} title="Form"/>
-                <Scene key="internetorderlist" component={OrdersComponent} hideNavBar={true} title="Form"/>
                 <Scene key="walkthrough" component={WalkthroughComponent} hideNavBar={true} title="Form"/>
+                <Scene key="internetorderlist" component={OrdersComponent} hideNavBar={true} title="Form"/>
                 <Scene key="choosehotel" component={HomeComponent} hideNavBar={true} title="Form"/>
                 <Scene key="openform" component={FormsComponent} hideNavBar={true} title="Form"/>
                 <Scene key="internetorderlist" component={OrdersComponent} hideNavBar={true} title="Form"/>
@@ -82,7 +82,11 @@ let style = StyleSheet.create({
         color:'red'
     }
 });
-const deploymentKey = Platform.OS === 'ios' ? 'gW-vX1IiuEdteLWjcsTE_WqpuzrxNJS-h1V4M ' : 'dIQukamQjk_NrMoHi8FMx-rahYR8NJS-h1V4M ';
-let codePushOptions = { checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, deploymentKey: deploymentKey };
-TravelSurfer = codePush(TravelSurfer);
+const deploymentKey = 'woKC8lUCFrcQgYHhyh1tJNFDFcIhNJS-h1V4M'; // Platform.OS === 'ios' ? 'gW-vX1IiuEdteLWjcsTE_WqpuzrxNJS-h1V4M ' : 'dIQukamQjk_NrMoHi8FMx-rahYR8NJS-h1V4M ';
+let codePushOptions = {updateDialog: true, checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, deploymentKey: deploymentKey };
+TravelSurfer = codePush(codePushOptions)(TravelSurfer);
 AppRegistry.registerComponent('TravelSurfer', () => TravelSurfer);
+// iphone
+// 0706 430 3773
+// Ada
+// 0816 016 9561
