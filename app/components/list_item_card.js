@@ -14,13 +14,13 @@ export default class ListItemCard extends Component{
                         <CardItem>
                             <View style={{flexDirection : 'row', justifyContent:'space-between'}}>
                                 <View>
-                                    <Text style={{fontFamily: 'AvenirNext-Medium', fontWeight:'bold', fontSize:15}}>{this.props.text}</Text>
+                                    <Text style={{fontFamily: 'AvenirNext-Medium', fontWeight:'bold', fontSize:15}}>{this.props.text.booking_url}</Text>
                                     <Text style={{fontFamily: 'AvenirNext-Medium', color:'grey'}}>Hong Kong</Text>
-                                    <Text style={{fontFamily: 'AvenirNext-Medium', color:'grey'}}>$199</Text>
-                                    <Text style={{fontFamily: 'AvenirNext-Medium', color:'grey'}}>No Internet Order</Text>
+                                    <Text style={{fontFamily: 'AvenirNext-Medium', color:'grey'}}>${this.props.text.price}</Text>
+                                    <Text style={{fontFamily: 'AvenirNext-Medium', color:'grey'}}>{this.props.text.boarding_type.name}</Text>
                                 </View>
                                 <View>
-                                    <Image source={{uri: 'https://exp.cdn-hotels.com/hotels/1000000/50000/45800/45775/45775_148_z.jpg'}}
+                                    <Image source={{uri: 'https://source.unsplash.com/random/100x100'}}
                                            style={{width: 100, height: 80}} />
                                 </View>
                             </View>

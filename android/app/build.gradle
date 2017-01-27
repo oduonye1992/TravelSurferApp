@@ -127,6 +127,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-onesignal')
     compile 'com.google.android.gms:play-services-maps:10.0.1'
     compile project(':react-native-code-push')
     compile project(':react-native-device-info')

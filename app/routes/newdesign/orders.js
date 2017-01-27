@@ -28,9 +28,9 @@ export default class OrdersComponent extends Component {
         fetch(QueryBuilder.endpoint+'internet_price_order')
             .then((response) => response.json())
             .then((responseJson) => {
-                alert(JSON.stringify(responseJson[0]));
+                alert(JSON.stringify(responseJson));
                 this.setState({
-                    //isLoading : false,
+                    isLoading : false,
                     dataSource: this.ds.cloneWithRows(responseJson)
                 });
             })
@@ -52,7 +52,7 @@ export default class OrdersComponent extends Component {
             }
         />
     }
-    render(){
+    renderMode (){
         if (this.state.isLoading){
             return (
                 <View style={{alignItems:'center', justifyContent:'center', flex:1}}>
@@ -60,7 +60,11 @@ export default class OrdersComponent extends Component {
                 </View>
             );
         } else {
-            return (
+            this.listView();
+        }
+    }
+    render(){
+        return (
                 <Container style={styles.container}>
                     <Header style={styles.header}>
                         <Button transparent>
@@ -73,18 +77,12 @@ export default class OrdersComponent extends Component {
                     </Header>
 
                     <Content style={styles.content}>
-                        {this.listView()}
+                        {this.renderMode()}
                     </Content>
-
-                    <Footer style={styles.footer}>
-                        <TouchableHighlight onPress={Actions.internetorderdetail}>
-                            <Text style={{fontWeight : 'bold', fontSize:22}}>CONTINUE</Text>
-                        </TouchableHighlight>
-                    </Footer>
                 </Container>
             );
         }
-    }
+
 }
 const styles = StyleSheet.create({
     container:{

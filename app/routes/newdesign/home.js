@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, ListView, View, Image, ScrollView, TouchableHighlight } from 'react-native';
+import { Text, StyleSheet, ListView, View, Image, ScrollView, TouchableHighlight, Alert } from 'react-native';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Icon } from 'native-base';
 import SearchBar from 'react-native-material-design-searchbar';
 import ListItemPlain from '../../components/list_item_plain';
@@ -130,13 +130,30 @@ export default class HomeComponent extends Component {
                 <Header style={styles.header}>
                     <Button
                         onPress={() =>{
-                            Actions.internetorderlist();
+                            requestAnimationFrame(function(){
+                                store.dispatch({
+                                    type : 'OPEN_DRAWER'
+                                })
+                            })
                         }}
                         transparent>
                             <Icon name='md-menu' style={styles.colorWhite}/>
                     </Button>
                     <Title style={[styles.colorWhite, styles.fontAvenir]}>TRAVEL SURFER</Title>
-                    <Button transparent>
+                    <Button transparent
+                            onPress = {
+                                () => {
+                                    Alert.alert(
+                                      'New Search Order',
+                                      'You are creating a new Search Order. Existing forms will be cleared',
+                                      [
+                                        {text: 'Continue', onPress: () => Actions.choosehotel()},
+                                        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                                      ]
+                                    )
+                                }
+                            }
+                    >
                         <Icon name='md-add' style={styles.colorWhite}/>
                     </Button>
                 </Header>

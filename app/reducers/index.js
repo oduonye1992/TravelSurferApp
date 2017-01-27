@@ -1,6 +1,7 @@
 var appReducer = function(state, action) {
     if (state === undefined){
         return  {
+            drawerOpen : false,
             isFirstTime : true,
             userEmail : null,
             isFormActive : false, // Choose whather the form is active
@@ -32,6 +33,16 @@ var appReducer = function(state, action) {
     if(action.type == 'HOTEL_SELECTED'){
         let newState = state;
         newState.application.hotel = action.data.value;
+        return newState;
+    }
+    if(action.type == 'OPEN_DRAWER'){
+        let newState = state;
+        newState.drawerOpen = true;
+        return newState;
+    }
+    if(action.type == 'CLOSE_DRAWER'){
+        let newState = state;
+        newState.drawerOpen = false;
         return newState;
     }
     if(action.type == 'FORM_UPDATE'){
