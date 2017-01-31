@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, ListView, View, Image, ScrollView } from 'react-native';
+import { Text, StyleSheet,TouchableHighlight, ListView, View, Image, ScrollView } from 'react-native';
 import { Container, Header, Title, Card, CardItem, Content, Footer, FooterTab, Button, Icon } from 'native-base';
-import SearchBar from 'react-native-material-design-searchbar';
 import ListItemCard from '../../components/list_item_card';
-import MapView from 'react-native-maps';
+import {Actions} from 'react-native-router-flux';
 import StarRating from 'react-native-star-rating';
 import Hr from '../../lib/hr';
+import store from '../../store/store';
 
 export default class OrderDetailComponent extends Component {
     ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -13,13 +13,7 @@ export default class OrderDetailComponent extends Component {
         super(props);
         this.state = {
             dataSource: this.ds.cloneWithRows(
-                [
-                    'Grand Hyatt',
-                    'Grand Hya',
-                    'Grand Hua',
-                    'Grant huayu',
-                    'Grant Huaus'
-                ]
+                []
             )
         }
     }
@@ -33,8 +27,8 @@ export default class OrderDetailComponent extends Component {
                     <View>
                         <View style={{flexDirection : 'row', justifyContent:'space-between'}}>
                             <View>
-                                <Text style={{fontFamily: 'AvenirNext-Medium', fontWeight:'bold'}}>Grand Hyatt</Text>
-                                <Text style={{fontFamily: 'AvenirNext-Medium', color:'grey'}}>Hong Kong</Text>
+                                <Text style={{fontFamily: 'AvenirNext-Medium', fontWeight:'bold'}}>{this.props.hotel.name}</Text>
+                                <Text style={{fontFamily: 'AvenirNext-Medium', color:'grey'}}>{this.props.hotel.country_id}</Text>
                                 <Text style={{height:6}}>.</Text>
                                 <StarRating
                                     disabled={false}
@@ -53,9 +47,9 @@ export default class OrderDetailComponent extends Component {
                         <Hr lineColor='#ecf0f1' width="100"/>
                         <View style={{marginTop:10}}>
                             <View>
-                                <Text style={{fontFamily: 'AvenirNext-Medium', color:'#00638c'}}>Grand Hyatt</Text>
+                                <Text style={{fontFamily: 'AvenirNext-Medium', color:'#00638c'}}>{this.props.hotel.name}</Text>
                                 <Text style={{fontFamily: 'AvenirNext-Medium', color:'#00638c'}}>Internet Order</Text>
-                                <Text style={{fontFamily: 'AvenirNext-Medium'}}>$1777</Text>
+                                <Text style={{fontFamily: 'AvenirNext-Medium'}}>${this.props.price}</Text>
                             </View>
                         </View>
                         <Text style={{marginTop:10}}></Text>
@@ -79,7 +73,7 @@ export default class OrderDetailComponent extends Component {
                         <View style={{marginTop:10}}>
                             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                                 <Icon name='md-time' style={{color:'black'}}/>
-                                <Text style={{fontFamily: 'AvenirNext-Medium', marginTop:14}}>12-12-2016</Text>
+                                <Text style={{fontFamily: 'AvenirNext-Medium', marginTop:14}}>{this.props.travel_start_date}</Text>
                             </View>
                         </View>
                         <Text style={{marginTop:3}}></Text>
@@ -87,7 +81,7 @@ export default class OrderDetailComponent extends Component {
                         <View style={{marginTop:10}}>
                             <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                                 <Icon name='md-plane' style={{color:'black'}}/>
-                                <Text style={{fontFamily: 'AvenirNext-Medium', marginTop:14}}>Frankfurt Airport</Text>
+                                <Text style={{fontFamily: 'AvenirNext-Medium', marginTop:14}}>{this.props.airport_id}</Text>
                             </View>
                         </View>
                         <Text style={{marginTop:3}}></Text>
@@ -124,12 +118,27 @@ export default class OrderDetailComponent extends Component {
         return (
             <Container style={styles.container}>
                 <Header style={styles.header}>
-                    <Button transparent>
+                    <Button
+                        onPress={() =>{
+                            requestAnimationFrame(function(){
+                                store.dispatch({
+                                    type : 'OPEN_DRAWER'
+                                })
+                            })
+                        }}
+                        transparent>
                         <Icon name='md-menu' style={styles.colorWhite}/>
                     </Button>
-                    <Title style={[styles.colorWhite, styles.fontAvenir]}>TRAVEL SURFER</Title>
-                    <Button transparent >
-                        <Icon name='md-add' style={styles.colorWhite}/>
+                    <Title style={[styles.colorWhite, styles.fontAvenir]}>INTERNET PRICE</Title>
+                    <Button transparent
+                            onPress = {
+                                () => {
+                                    requestAnimationFrame(() => {
+                                        Actions.choosehotel({type:'reset'})
+                                    });
+                                }
+                            }
+                    ><Icon name='md-add' style={styles.colorWhite}/>
                     </Button>
                 </Header>
 
@@ -138,7 +147,15 @@ export default class OrderDetailComponent extends Component {
                 </Content>
 
                 <Footer style={styles.footer}>
-                    <Text style={{fontWeight : 'bold', fontSize:22}}>CONTINUE</Text>
+                    <TouchableHighlight
+                        onPress={() => {
+                            requestAnimationFrame(() => {
+                                Actions.webview({url : this.props.booking_url})
+                            });
+                        }}
+                    >
+                        <Text style={{fontWeight : 'bold', fontSize:22}}>BOOK TICKET</Text>
+                        </TouchableHighlight>
                 </Footer>
             </Container>
         );

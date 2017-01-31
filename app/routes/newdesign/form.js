@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, ListView, View, Image,
+import { Text,Alert, StyleSheet, ListView, View, Image,Dimensions,
     ScrollView, TouchableHighlight,DatePickerIOS, TextInput, AsyncStorage
 } from 'react-native';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Icon } from 'native-base';
@@ -11,15 +11,20 @@ import store from "../../store/store";
 import Picker from 'react-native-picker';
 var moment = require('moment');
 
+
 export default class FormsComponent extends Component {
     ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     constructor (props){
         super(props);
         this.state = {
             parent : store.getState().application,
-            tempRoomType : {}
+            tempRoomType : {},
+            isComplete : true
         };
         this.subscribe();
+    }
+    componentDidMount(){
+        //moment(this.state.parent.start_date).format('YYYY-MM-DD')
     }
     subscribe(){
         let that = this;
@@ -163,18 +168,32 @@ export default class FormsComponent extends Component {
         }
     }
     detailView(){
+        let {height, width} =  Dimensions.get('window');
         return <ScrollView style={{padding:6}}>
             <View>
-                <Image source={{uri: this.state.parent.hotel.image}}
-                       style={{width: 320, height: 140}} />
-                <View style={{marginTop:-100}}>
-                    <Text style={{fontFamily: 'AvenirNext-Medium', color:'white', fontWeight:'bold'}}>{this.state.parent.hotel.name}</Text>
-                    <Text style={{fontFamily: 'AvenirNext-Medium', color:'black'}}>{this.state.parent.hotel.country.name}</Text>
-                </View>
+                <Image source={{uri: this.state.parent.hotel.images.length ? this.state.parent.hotel.images[0].title : 'https://source.unsplash.com/random/400x800'}}
+                       style={{width: width*0.9, height: height*0.25}}>
+                    <TouchableHighlight
+                        underlayColor="#2c3e50"
+                        onPress = {() => {}}
+                        style={{backgroundColor:'white', opacity:0.7, width: width*0.9, height: height*0.25, alignItems:'flex-start', justifyContent:'center'}}
+                    >
+                        <View style={{padding:10}}>
+                            <Text style={{fontFamily: 'AvenirNext-Medium', color:'black', fontWeight:'bold', fontSize:20}}>{this.state.parent.hotel.name}</Text>
+                            <Text style={{fontFamily: 'AvenirNext-Medium', color:'black'}}>{this.state.parent.hotel.country.title}</Text>
+                        </View>
+                    </TouchableHighlight>
+                </Image>
             </View>
-            <View style={{marginTop:80}}>
-                <Text style={{color:'#00638c', fontFamily: 'AvenirNext-Medium', fontSize:15}}>Airport</Text>
-                <TouchableHighlight onPress={this.openAirports}>
+            <View style={{marginTop:20}}>
+                <Text style={styles.question}>Airport</Text>
+                <TouchableHighlight
+                    underlayColor="#ecf0f1"
+                    onPress={()=> {
+                    requestAnimationFrame(() => {
+                        this.openAirports();
+                    });
+                }}>
                     <View style={{flexDirection:'row'}}>
                         <Icon name='md-plane' style={{color:'black', fontSize:20}}/>
                         <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium', marginLeft:10}}>{this.state.parent.airport.name}</Text>
@@ -186,24 +205,30 @@ export default class FormsComponent extends Component {
                 <Text style={{color:'#00638c', fontFamily: 'AvenirNext-Medium', fontSize:15}}>When do you want to travel?</Text>
                 <View style={{flexDirection:'row', marginTop:10, justifyContent :'space-between'}}>
                     <View style={{width:150}}>
-                        <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium', fontSize:15}}>Start Date</Text>
+                        <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium', fontSize:15, marginBottom:5}}>Start Date</Text>
                             <View style={{flexDirection:'row'}}>
                                 <TouchableHighlight
+                                    underlayColor="#ecf0f1"
                                     onPress={() => {
-                                        this.openCalender('start_date');
+                                        requestAnimationFrame(() => {
+                                            this.openCalender('start_date');
+                                        });
                                     }}
                                 >
-                                <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium'}}>{moment(this.state.parent.start_date).format('YYYY-MM-DD')}</Text>
+                                <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium'}}>{this.state.parent.start_date}</Text>
                                 </TouchableHighlight>
                             </View>
                             <Hr lineColor='grey' width="100"/>
                     </View>
                     <View style={{width:150}}>
-                        <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium', fontSize:15}}>End Date</Text>
+                        <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium', fontSize:15, marginBottom:5}}>End Date</Text>
                         <View style={{flexDirection:'row'}}>
                             <TouchableHighlight
+                                underlayColor="#ecf0f1"
                                 onPress={() => {
-                                    this.openCalender('end_date');
+                                    requestAnimationFrame(() => {
+                                        this.openCalender('end_date');
+                                    });
                                 }}
                             >
                                 <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium'}}>{this.state.parent.end_date}</Text>
@@ -214,10 +239,11 @@ export default class FormsComponent extends Component {
                 </View>
             </View>
             <View style={{marginTop:20}}>
-                <Text style={{color:'#00638c', fontFamily: 'AvenirNext-Medium', fontSize:15}}>How many Grown Ups?</Text>
+                <Text style={styles.question}>How many Grown Ups?</Text>
                 <View style={{flexDirection:'row', marginTop:10}}>
                     <TextInput
                         style={{height: 40, borderColor: 'gray', width:500,  fontFamily: 'AvenirNext-Medium', marginLeft:10, color:'grey'}}
+                        keyboardType = "numeric"
                         onChangeText={(text) => {
                             store.dispatch({
                                 type: 'FORM_UPDATE',
@@ -233,7 +259,7 @@ export default class FormsComponent extends Component {
                 <Hr lineColor='grey' width="100"/>
             </View>
             <View style={{marginTop:20}}>
-                <Text style={{color:'#00638c', fontFamily: 'AvenirNext-Medium', fontSize:15}}>How Many Children are coming</Text>
+                <Text style={styles.question}>How Many Children are coming</Text>
                 <View style={{flexDirection:'row',marginTop:10}}>
                     <TextInput
                         style={{height: 40, borderColor: 'gray', width:500,  fontFamily: 'AvenirNext-Medium', marginLeft:10, color:'grey'}}
@@ -252,7 +278,7 @@ export default class FormsComponent extends Component {
                 <Hr lineColor='grey' width="100"/>
             </View>
             <View style={{marginTop:20}}>
-                <Text style={{color:'#00638c', fontFamily: 'AvenirNext-Medium', fontSize:15}}>Transport from Airport to Hotel?</Text>
+                <Text style={styles.question}>Transport from Airport to Hotel?</Text>
                 <View style={{flexDirection:'row', marginTop:10}}>
                     <Icon name='md-bus' style={{color:'black', fontSize:20}}/>
                     <TouchableHighlight
@@ -263,7 +289,7 @@ export default class FormsComponent extends Component {
                 <Hr lineColor='grey' width="100"/>
             </View>
             <View style={{marginTop:20}}>
-                <Text style={{color:'#00638c', fontFamily: 'AvenirNext-Medium', fontSize:15}}>Boarding?</Text>
+                <Text style={styles.question}>Boarding?</Text>
                 <View style={{flexDirection:'row', marginTop:10}}>
                     <Icon name='md-beer' style={{color:'black', fontSize:20}}/>
                     <TouchableHighlight
@@ -275,10 +301,16 @@ export default class FormsComponent extends Component {
                 <Hr lineColor='grey' width="100"/>
             </View>
             <View style={{marginTop:20}}>
-                <Text style={{color:'#00638c', fontFamily: 'AvenirNext-Medium', fontSize:15}}>Room Type</Text>
+                <Text style={styles.question}>Room Type</Text>
                 <View style={{flexDirection:'row', marginTop:10}}>
                     <Icon name='md-glasses' style={{color:'black', fontSize:20}}/>
-                    <TouchableHighlight onPress={this.openPicker.bind(this, 'room_type')}>
+                    <TouchableHighlight
+                        underlayColor="#ecf0f1"
+                        onPress={() => {
+                        requestAnimationFrame(() => {
+                            this.openPicker('room_type');
+                        });
+                    }}>
                         <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium', marginLeft:10}}>{Object.keys(this.state.parent.room_type)[0]}</Text>
                     </TouchableHighlight>
                 </View>
@@ -303,24 +335,49 @@ export default class FormsComponent extends Component {
         return (
             <Container style={styles.container}>
                 <Header style={styles.header}>
-                    <Button transparent>
-                        <TouchableHighlight>
-                            <Icon name='md-menu' style={styles.colorWhite}/>
-                        </TouchableHighlight>
+                    <Button
+                        onPress={() =>{
+                            requestAnimationFrame(function(){
+                                Actions.pop();
+                            })
+                        }}
+                        transparent>
+                        <Icon name='md-arrow-back' style={styles.colorWhite}/>
                     </Button>
                     <Title style={[styles.colorWhite, styles.fontAvenir]}>TRAVEL SURFER</Title>
-                    <Button transparent >
+                    <Button transparent
+                            onPress = {
+                                () => {
+                                    requestAnimationFrame(() => {
+                                        Alert.alert(
+                                            'New Search Order',
+                                            'You are creating a new Search Order. Existing forms will be cleared',
+                                            [
+                                                {text: 'Continue', onPress: () => Actions.choosehotel()},
+                                                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                                            ]
+                                        )
+                                    });
+                                }
+                            }
+                    >
                         <Icon name='md-add' style={styles.colorWhite}/>
                     </Button>
                 </Header>
-
                 <Content style={styles.content}>
                     {this.detailView()}
                 </Content>
-
                 <Footer style={styles.footer}>
-                    <TouchableHighlight onPress={this.sendForm}>
-                        <Text style={{fontWeight : 'bold', fontSize:22}}>CONTINUE</Text>
+                    <TouchableHighlight
+                        underlayColor="#e67e22"
+                        onPress={() => {
+                        requestAnimationFrame(() => {
+                            if (this.state.isComplete){
+                                this.sendForm();
+                            }
+                        });
+                    }}>
+                        <Text style={{fontWeight : 'bold', fontSize:22, color: this.state.isComplete ? '#2c3e50' : '#7f8c8d'}}>CONTINUE</Text>
                     </TouchableHighlight>
                 </Footer>
             </Container>
@@ -329,6 +386,9 @@ export default class FormsComponent extends Component {
 }
 const styles = StyleSheet.create({
     container:{},
+    question : {
+        color:'#00638c', fontFamily: 'AvenirNext-Medium', fontSize:15, marginBottom:5
+    },
     colorWhite : {
       color: 'white',
     },
@@ -349,6 +409,6 @@ const styles = StyleSheet.create({
         backgroundColor:'#f39c12'
     },
     content : {
-        padding : 20
+        padding : 10
     }
 });

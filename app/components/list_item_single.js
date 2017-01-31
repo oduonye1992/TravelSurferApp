@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Image, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import Hr from '../lib/hr';
 
-export default class ListItemPlain extends Component{
+export default class ListItemSingle extends Component{
     constructor (props) {
         super(props);
     }
@@ -18,7 +18,7 @@ export default class ListItemPlain extends Component{
                     }}
                 >
                     <View style={{flexDirection : 'row', padding : 10, alignItems:'center'}}>
-                        <Image source={{uri: this.props.text.images.length ? this.props.text.images[0].title : 'https://source.unsplash.com/random/400x800'}}
+                        <Image source={{uri: this.props.text.image}}
                                style={{width: 40, height: 40, borderRadius:5}} />
                         <View style={{marginLeft:10}}>
                             <Text
@@ -37,7 +37,7 @@ export default class ListItemPlain extends Component{
                                     width:400,
                                     color : 'grey'
                                 }}
-                            >{this.props.text.location}
+                            >{this.props.text.country.title}
                             </Text>
                         </View>
                     </View>

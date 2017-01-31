@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, ListView, View, Image, ScrollView, TouchableHighlight, Alert } from 'react-native';
+import { Text, StyleSheet,Dimensions, ListView, View, Image, ScrollView, TouchableHighlight, Alert } from 'react-native';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Icon } from 'native-base';
 import SearchBar from 'react-native-material-design-searchbar';
 import ListItemPlain from '../../components/list_item_plain';
@@ -22,6 +22,9 @@ export default class HomeComponent extends Component {
             selectedHotel : null
         }
     }
+    componentDidMount(){
+
+    }
     itemClicked(data) {
         this.setState({
             isSearching : false,
@@ -29,24 +32,35 @@ export default class HomeComponent extends Component {
         });
     }
     detailView(){
+        let {height, width} =  Dimensions.get('window');
         return <ScrollView style={{padding:6}}>
-            <Image source={{uri: this.state.selectedHotel.image}}
-                   style={{width: 320, height: 180}} />
-            <View style={{marginTop:10}}>
-                <Text style={{color:'#2c3e50', fontFamily: 'AvenirNext-Medium'}}>{this.state.selectedHotel.name}</Text>
-                <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium'}}>{this.state.selectedHotel.description}</Text>
+            <View>
+                <Image source={{uri: this.state.selectedHotel.images.length ? this.state.selectedHotel.images[0].title : 'https://source.unsplash.com/random/400x800'}}
+                       style={{width: width*0.85, height: height*0.3}} />
+                <View style={{marginTop:10}}>
+                    <Text style={{color:'#2c3e50', fontFamily: 'AvenirNext-Medium', fontSize:20}}>{this.state.selectedHotel.name}</Text>
+                    <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium'}}>{this.state.selectedHotel.location}</Text>
+                    <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium'}}>Tel:{this.state.selectedHotel.phone}</Text>
+                    <Text style={{color:'grey', fontFamily: 'AvenirNext-Medium'}}>{this.state.selectedHotel.email}</Text>
+                </View>
             </View>
-            <View style={{marginTop:10}}>
+            {this.renderMap()}
+        </ScrollView>
+    }
+    renderMap(){
+        let {height, width} =  Dimensions.get('window');
+        return (
+            <View style={{flex:1, marginTop:10, height:height*0.3}}>
                 <MapView
+                    style={ styles.map }
                     initialRegion={{
-                        latitude: 37.78825,
-                        longitude: -122.4324,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
+                        latitude: this.state.selectedHotel.latitude,
+                        longitude: this.state.selectedHotel.longitude
                     }}
                 />
             </View>
-        </ScrollView>
+
+        );
     }
     listView(){
         return         <ListView
@@ -143,28 +157,29 @@ export default class HomeComponent extends Component {
                     <Button transparent
                             onPress = {
                                 () => {
-                                    Alert.alert(
-                                      'New Search Order',
-                                      'You are creating a new Search Order. Existing forms will be cleared',
-                                      [
-                                        {text: 'Continue', onPress: () => Actions.choosehotel()},
-                                        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                                      ]
-                                    )
+                                    requestAnimationFrame(() => {
+                                        Alert.alert(
+                                            'New Search Order',
+                                            'You are creating a new Search Order. Existing forms will be cleared',
+                                            [
+                                                {text: 'Continue', onPress: () => Actions.choosehotel()},
+                                                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                                            ]
+                                        )
+                                    });
                                 }
                             }
                     >
                         <Icon name='md-add' style={styles.colorWhite}/>
                     </Button>
                 </Header>
-
                 <Content style={styles.content}>
                     <SearchBar
                         onSearchChange={this.searchHotels.bind(this)}
                         height={40}
                         onFocus={this.setSearching.bind(this)}
                         onBlur={() => console.log('On Blur')}
-                        inputStyle = {{fontFamily: 'AvenirNext-Medium', color:'#2c3e50', backgroundColor:'white', borderColor:'white'}}
+                        inputStyle = {{color:'#2c3e50', backgroundColor:'white', borderColor:'white'}}
                         placeholder={'Search Hotels'}
                         iconColor = "#2c3e50"
                         placeholderColor = "#2c3e50"
@@ -176,27 +191,36 @@ export default class HomeComponent extends Component {
                 </Content>
 
                 <Footer style={styles.footer}>
-                    <TouchableHighlight onPress={this.openOrderPage.bind(this)}>
-                        <Text style={{fontWeight : 'bold', fontSize:22}}>CONTINUE</Text>
+                    <TouchableHighlight
+                        underlayColor="#e67e22"
+                        onPress={() => {
+                        requestAnimationFrame(() => {
+                            if (!this.state.isSearching){
+                                this.openOrderPage();
+                            }
+                        });
+                    }}>
+                        <Text style={{fontWeight : 'bold',color: this.state.isSearching ? '#7f8c8d' : '#2c3e50', fontSize:22}}>CONTINUE</Text>
                     </TouchableHighlight>
                 </Footer>
             </Container>
         );
     }
 }
+let {height, width} =  Dimensions.get('window');
 const styles = StyleSheet.create({
-    container:{
-
-    },
-    colorWhite : {
-      color: 'white',
-    },
     map: {
         position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
-        bottom: 0
+        bottom: 0,
+    },
+    container:{
+
+    },
+    colorWhite : {
+      color: 'white',
     },
     fontAvenir : {
         fontFamily: 'AvenirNext-Medium'
@@ -205,7 +229,7 @@ const styles = StyleSheet.create({
         backgroundColor : '#00638c'
     },
     footer : {
-        backgroundColor:'#f39c12'
+        backgroundColor: '#f39c12'
     },
     content : {
         padding : 20,

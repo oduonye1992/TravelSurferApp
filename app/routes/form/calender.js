@@ -5,6 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Actions} from 'react-native-router-flux';
 import Calendar from 'react-native-calendar';
 import store from "../../store/store";
+var moment = require('moment');
 
 export default class CalenderComponent extends Component{
     constructor (props){
@@ -19,13 +20,12 @@ export default class CalenderComponent extends Component{
             type: 'FORM_UPDATE',
             data: {
                 key : this.props.data,
-                value : this.state.selected_date
+                value : moment(this.state.selected_date).format('YYYY-MM-DD')
             }
         });
         Actions.pop();
     }
     onDateChange(date){
-        alert(date);
         this.setState({
             selected_date : date
         });
@@ -49,7 +49,13 @@ export default class CalenderComponent extends Component{
         return(
         <Container style={styles.container}>
             <Header style={styles.header}>
-                <Button transparent>
+                <Button
+                    onPress={() =>{
+                        requestAnimationFrame(function(){
+                            Actions.pop();
+                        })
+                    }}
+                    transparent>
                     <Icon name='md-arrow-back' style={styles.colorWhite}/>
                 </Button>
                 <Title style={[styles.colorWhite, styles.fontAvenir]}>CHOOSE DATE</Title>

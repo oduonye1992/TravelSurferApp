@@ -5,7 +5,7 @@ import { Text, StyleSheet, ListView, View,
 } from 'react-native';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Icon } from 'native-base';
 import SearchBar from 'react-native-material-design-searchbar';
-import ListItemPlain from '../../components/list_item_plain';
+import ListItemSingle from '../../components/list_item_single';
 import {Actions} from 'react-native-router-flux';
 import MapView from 'react-native-maps';
 import QueryBuilder from '../../config/settings';
@@ -40,7 +40,7 @@ export default class AirportComponent extends Component {
             dataSource={this.state.dataSource}
             renderRow={
                 (rowData) => {
-                    return <ListItemPlain
+                    return <ListItemSingle
                         onClicked = {this.itemClicked.bind(this)}
                         color = "#34495e"
                         text = {rowData}
@@ -102,7 +102,13 @@ export default class AirportComponent extends Component {
         return (
             <Container style={styles.container}>
                 <Header style={styles.header}>
-                    <Button transparent>
+                    <Button
+                        onPress={() =>{
+                            requestAnimationFrame(function(){
+                                Actions.pop();
+                            })
+                        }}
+                        transparent>
                         <Icon name='md-arrow-back' style={styles.colorWhite}/>
                     </Button>
 

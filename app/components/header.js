@@ -12,11 +12,7 @@ export default class HeaderComponent extends Component{
             dataSource: this.ds.cloneWithRows(
                 [
                     {
-                        title: 'My Orders',
-                        icon: 'ios-chatbubbles-outline'
-                    },
-                    {
-                        title: 'Internet Orders',
+                        title: 'My Offers',
                         icon: 'ios-people-outline'
                     }
                 ]
@@ -26,11 +22,7 @@ export default class HeaderComponent extends Component{
     renderSidebar(){
         return (
             <View>
-                <View>
-                    <View style={{height:200, backgroundColor : '#00638c', alignItems:'center', justifyContent:'center'}}>
-                        <Image style={styles.image} source={{uri: 'https://source.unsplash.com/random/100x100'}}/>
-                    </View>
-                </View>
+
                 <View style={{padding:10}}>
                     <ListView
                         dataSource={this.state.dataSource}
@@ -83,20 +75,10 @@ export default class HeaderComponent extends Component{
         );
     }
     onClick(data){
-        if (data.title == 'My Orders'){
+        if (data.title == 'My Offers'){
             Actions.internetorderlist();
         } else if (data.title == 'Internet Order'){
             Actions.parents();
-        } else if (data.title == 'Fees'){
-            Actions.fees();
-        } else if (data.title == 'Reciepts'){
-            Actions.pending_fees();
-        } else if (data.title == 'Accounts'){
-            Actions.accounts();
-        } else if (data.title == 'Messages'){
-            Actions.accounts();
-        } else if (data.title == 'Groups'){
-            Actions.groups();
         }
         store.dispatch({
             type : 'CLOSE_DRAWER'

@@ -17,6 +17,7 @@ import WalkthroughComponent from './routes/newdesign/walkthrough';
 import AirportComponent from './routes/newdesign/airports';
 import ConfirmationComponent from './routes/newdesign/confirmation';
 import OptionalEmailComponent from './routes/newdesign/optionalemail';
+import WebViewComponent from './routes/newdesign/webview';
 import Drawer from 'react-native-drawer';
 import codePush from "react-native-code-push";
 import store from './store/store';
@@ -32,7 +33,7 @@ export default class TravelSurfer extends Component {
     }
     componentDidMount(){
         this.subscribe();
-        this.configureNotification();
+        // this.configureNotification();
     }
     subscribe(){
         let that = this;
@@ -80,7 +81,7 @@ export default class TravelSurfer extends Component {
                 type="static"
                 tapToClose={true}
                 open = {this.state.parent.drawerOpen}
-                styles={drawerStyles}
+
                 content={<HeaderComponent />}
                 tweenHandler={Drawer.tweenPresets.parallax}
             >
@@ -94,6 +95,7 @@ export default class TravelSurfer extends Component {
                 <Scene key="confirmation" component={ConfirmationComponent} hideNavBar={true} title="Form"/>
                 <Scene key="addemail" component={OptionalEmailComponent} hideNavBar={true} title="Form"/>
                 <Scene key="calender" component={CalenderComponent} hideNavBar={true} title="Form"/>
+                <Scene key="webview" component={WebViewComponent} hideNavBar={true} title="Form"/>
             </Router>
             </Drawer>
         )

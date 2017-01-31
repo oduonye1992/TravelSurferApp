@@ -7,26 +7,34 @@ export default class ListItemCard extends Component{
     constructor (props) {
         super(props);
     }
+    componentDidMount(){}
     render(){
         return (
-            <View>
-                    <Card style={{ flex: 0 }}>
+                    <Card>
                         <CardItem>
-                            <View style={{flexDirection : 'row', justifyContent:'space-between'}}>
-                                <View>
-                                    <Text style={{fontFamily: 'AvenirNext-Medium', fontWeight:'bold', fontSize:15}}>{this.props.text.booking_url}</Text>
-                                    <Text style={{fontFamily: 'AvenirNext-Medium', color:'grey'}}>Hong Kong</Text>
-                                    <Text style={{fontFamily: 'AvenirNext-Medium', color:'grey'}}>${this.props.text.price}</Text>
-                                    <Text style={{fontFamily: 'AvenirNext-Medium', color:'grey'}}>{this.props.text.boarding_type.name}</Text>
+                            <TouchableHighlight
+                                underlayColor="#ecf0f1"
+                                onPress={() => {
+                                    requestAnimationFrame(() => {
+                                        this.props.onClick(this.props.text);
+                                    });
+                                }}
+                            >
+                                <View style={{flexDirection : 'row', justifyContent:'space-between'}}>
+                                    <View>
+                                        <Text style={{fontFamily: 'AvenirNext-Medium', fontWeight:'bold', fontSize:15}} >{this.props.text.hotel.name}</Text>
+                                        <Text style={{fontFamily: 'AvenirNext-Medium', color:'grey'}}>Hong Kong</Text>
+                                        <Text style={{fontFamily: 'AvenirNext-Medium', color:'grey'}}>${this.props.text.price}</Text>
+                                        <Text style={{fontFamily: 'AvenirNext-Medium', color:'#3498db'}}>{this.props.text.booking_url}</Text>
+                                    </View>
+                                    <View>
+                                        <Image source={{uri: 'https://source.unsplash.com/random/100x100'}}
+                                               style={{width: 100, height: 80, borderRadius:5}} />
+                                    </View>
                                 </View>
-                                <View>
-                                    <Image source={{uri: 'https://source.unsplash.com/random/100x100'}}
-                                           style={{width: 100, height: 80}} />
-                                </View>
-                            </View>
+                            </TouchableHighlight>
                         </CardItem>
                     </Card>
-                </View>
 
         );
     }

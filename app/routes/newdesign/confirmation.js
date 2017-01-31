@@ -4,11 +4,7 @@ import { Container, Header, Title, Content, Footer, FooterTab, Button, Icon } fr
 import SearchBar from 'react-native-material-design-searchbar';
 import ListItemPlain from '../../components/list_item_plain';
 import {Actions} from 'react-native-router-flux';
-import MapView from 'react-native-maps';
-
-
-import AppIntro from 'react-native-app-intro';
-import Swiper from 'react-native-swiper';
+import store from '../../store/store';
 
 export default class ConfirmationComponent extends Component {
     ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -23,12 +19,27 @@ export default class ConfirmationComponent extends Component {
         return (
             <Container style={styles.container}>
                 <Header style={styles.header}>
-                    <Button transparent>
-                        <Icon name='ios-menu' style={styles.colorWhite}/>
+                    <Button
+                        onPress={() =>{
+                            requestAnimationFrame(function(){
+                                store.dispatch({
+                                    type : 'OPEN_DRAWER'
+                                })
+                            })
+                        }}
+                        transparent>
+                        <Icon name='md-menu' style={styles.colorWhite}/>
                     </Button>
                     <Title style={[styles.colorWhite, styles.fontAvenir]}>TRAVEL SURFER</Title>
-                    <Button transparent >
-                        <Icon name='md-add' style={styles.colorWhite}/>
+                    <Button transparent
+                            onPress = {
+                                () => {
+                                    requestAnimationFrame(() => {
+                                        Actions.choosehotel({type:'reset'})
+                                    });
+                                }
+                            }
+                    ><Icon name='md-add' style={styles.colorWhite}/>
                     </Button>
                 </Header>
                 <Content style={styles.content}>

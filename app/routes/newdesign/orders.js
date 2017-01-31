@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, ListView, View, Image, ScrollView, TouchableHighlight } from 'react-native';
+import { Text, StyleSheet,Dimensions, ListView, View, Image, ScrollView, TouchableHighlight } from 'react-native';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Icon } from 'native-base';
 import ListItemCard from '../../components/list_item_card';
-import MapView from 'react-native-maps';
-import Hr from '../../lib/hr';
 import {Actions} from 'react-native-router-flux';
-import store from "../../store/store";
 import QueryBuilder from '../../config/settings';
 import { Pulse } from 'react-native-loader';
+import store from '../../store/store';
 
 
 export default class OrdersComponent extends Component {
@@ -16,6 +14,7 @@ export default class OrdersComponent extends Component {
         super(props);
         this.state = {
             isLoading : true,
+            dataState : 'empty',
             dataSource: this.ds.cloneWithRows(
                 []
             )
@@ -28,9 +27,10 @@ export default class OrdersComponent extends Component {
         fetch(QueryBuilder.endpoint+'internet_price_order')
             .then((response) => response.json())
             .then((responseJson) => {
-                alert(JSON.stringify(responseJson));
+                //alert(JSON.stringify(responseJson));
                 this.setState({
                     isLoading : false,
+                    dataState : responseJson.length ? 'full' : 'empty',
                     dataSource: this.ds.cloneWithRows(responseJson)
                 });
             })
@@ -52,6 +52,17 @@ export default class OrdersComponent extends Component {
             }
         />
     }
+    renderEmpty(){
+        let {height, width} =  Dimensions.get('window');
+        return (
+            <View style={{alignItems:'center', height:width*1,justifyContent:'flex-end', padding:30}}>
+                <Text style={[styles.fontAvenir, {color:'#2c3e50', fontSize:30}]}>No Offers Yet</Text>
+                <Text style={[styles.fontAvenir, {color:'#2c3e50', fontSize:20, marginTop:10}]}>
+                    Wea re currently working hard to bring you the best offers worth your wait
+                </Text>
+            </View>
+        );
+    }
     renderMode (){
         if (this.state.isLoading){
             return (
@@ -60,22 +71,39 @@ export default class OrdersComponent extends Component {
                 </View>
             );
         } else {
-            this.listView();
+            if (this.state.dataState == 'empty'){
+                return this.renderEmpty();
+            }
+            return this.listView();
         }
     }
     render(){
         return (
                 <Container style={styles.container}>
                     <Header style={styles.header}>
-                        <Button transparent>
+                        <Button
+                            onPress={() =>{
+                                requestAnimationFrame(function(){
+                                    store.dispatch({
+                                        type : 'OPEN_DRAWER'
+                                    })
+                                })
+                            }}
+                            transparent>
                             <Icon name='md-menu' style={styles.colorWhite}/>
                         </Button>
                         <Title style={[styles.colorWhite, styles.fontAvenir]}>INTERNET PRICE</Title>
-                        <Button transparent>
-                            <Icon name='md-add' style={styles.colorWhite}/>
+                        <Button transparent
+                                onPress = {
+                                    () => {
+                                        requestAnimationFrame(() => {
+                                            Actions.choosehotel({type:'reset'})
+                                        });
+                                    }
+                                }
+                        ><Icon name='md-add' style={styles.colorWhite}/>
                         </Button>
                     </Header>
-
                     <Content style={styles.content}>
                         {this.renderMode()}
                     </Content>
