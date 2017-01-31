@@ -6,6 +6,6 @@
  var ratingUrl = 'https://' + publicEndpoint + '.formelo.com/actions/' + apiVersion + '/applets/review';
  */
 const QueryBuilder = {
-    endpoint : 'http://localhost:8000/api/'// 'http://138.201.245.218/api/'
+    endpoint : 'http://138.201.245.218/api/'
 };
 export default QueryBuilder;
